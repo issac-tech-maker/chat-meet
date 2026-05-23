@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Meets</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <section id="login-screen" class="screen active-screen" style="display: block;">
+      <div class="card login-card">
+        <h1>Chat Meets</h1>
+        <p>사용자 이름과 비밀번호로 로그인하거나 새 계정을 생성하세요.</p>
+        <div class="form-row">
+          <label>사용자 이름</label>
+          <input id="login-username" type="text" placeholder="이름을 입력하세요" />
+        </div>
+        <div class="form-row">
+          <label>비밀번호</label>
+          <input id="login-password" type="password" placeholder="비밀번호를 입력하세요" />
+        </div>
+        <button id="login-button" class="primary-button">로그인 / 계정 생성</button>
+        <p class="hint">동명이인 방지를 위해 사용자 이름은 고유해야 합니다.</p>
+        <p id="login-message" class="message"></p>
+      </div>
+    </section>
+
+    <section id="dashboard-screen" class="screen" style="display: none;">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div>
+            <h2 id="user-welcome">안녕하세요</h2>
+            <p id="user-subtitle">계정을 선택하고 친구를 만나세요.</p>
+          </div>
+        </div>
+        <nav class="nav-links">
+          <button class="nav-item active-tab" data-tab="friends-tab">친구 / 요청</button>
+          <button class="nav-item" data-tab="chat-tab">채팅</button>
+          <button class="nav-item" data-tab="meeting-tab">회의</button>
+          <button class="nav-item danger-button" id="logout-button">로그아웃</button>
+        </nav>
+      </aside>
+
+      <main class="main-panel">
+        <div id="friends-tab" class="tab-panel active-tab-panel">
+          <section class="panel-card">
+            <h3>친구 검색</h3>
+            <div class="form-row search-row">
+              <input id="friend-search-input" type="text" placeholder="친구 이름 검색" />
+              <button id="friend-search-button" class="secondary-button">검색</button>
+            </div>
+            <div id="search-results" class="list-group"></div>
+          </section>
+
+          <section class="panel-card">
+            <h3>수락 대기 중</h3>
+            <div id="pending-requests" class="list-group"></div>
+          </section>
+
+          <section class="panel-card">
+            <h3>친구 목록</h3>
+            <div id="friend-list" class="list-group"></div>
+          </section>
+        </div>
+
+        <div id="chat-tab" class="tab-panel">
+          <section class="panel-card chat-panel">
+            <div class="panel-row">
+              <h3>채팅방</h3>
+              <button id="create-group-button" class="secondary-button">그룹 채팅 만들기</button>
+            </div>
+            <div class="panel-row">
+              <div class="chat-list">
+                <div id="room-list" class="list-group"></div>
+              </div>
+              <div class="chat-view">
+                <div class="chat-header">
+                  <div>
+                    <h4 id="active-room-name">채팅방을 선택하세요</h4>
+                    <p id="active-room-members"></p>
+                  </div>
+                  <button id="open-room-settings" class="secondary-button">채팅방 설정</button>
+                </div>
+                <div id="chat-messages" class="message-window"></div>
+                <div class="message-input-row">
+                  <input id="chat-input" type="text" placeholder="메시지를 입력하세요" />
+                  <button id="send-chat-button" class="primary-button">전송</button>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="room-settings" class="panel-card hidden">
+            <h3>채팅방 설정</h3>
+            <div>
+              <p><strong>채팅방 삭제</strong></p>
+              <button id="delete-room-button" class="danger-button">채팅방 삭제</button>
+            </div>
+            <div class="form-row">
+              <label>채팅방에 친구 추가</label>
+            </div>
+            <div id="room-add-friends" class="list-group"></div>
+          </section>
+        </div>
+
+        <div id="meeting-tab" class="tab-panel">
+          <section class="panel-card">
+            <div class="panel-row">
+              <h3>회의 만들기</h3>
+              <button id="create-meeting-button" class="secondary-button">회의 생성</button>
+            </div>
+            <div class="form-row">
+              <label>회의 제목</label>
+              <input id="meeting-title-input" type="text" placeholder="회의 제목을 입력하세요" />
+            </div>
+          </section>
+
+          <section class="panel-card">
+            <h3>활성 회의</h3>
+            <div id="active-meeting-list" class="list-group"></div>
+          </section>
+
+          <section class="panel-card">
+            <h3>기록된 회의</h3>
+            <div id="saved-meeting-list" class="list-group"></div>
+          </section>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <div id="meeting-modal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="meeting-modal-title">회의</h3>
+        <button id="close-meeting-modal" class="icon-button">✕</button>
+      </div>
+      <div class="meeting-top-bar">
+        <div>
+          <button id="toggle-camera" class="secondary-button">카메라 켜기</button>
+          <button id="toggle-mic" class="secondary-button">마이크 켜기</button>
+        </div>
+        <div>
+          <button id="leave-meeting-button" class="danger-button">회의 나가기</button>
+          <button id="meeting-more-button" class="secondary-button">더보기</button>
+        </div>
+      </div>
+      <div class="meeting-body">
+        <div class="meeting-panel">
+          <div class="video-placeholder">
+            <p>카메라 미리보기</p>
+          </div>
+          <div class="meeting-chat-panel">
+            <div id="meeting-chat-messages" class="message-window"></div>
+            <div class="message-input-row">
+              <input id="meeting-chat-input" type="text" placeholder="채팅 입력" />
+              <button id="meeting-chat-send" class="primary-button">전송</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="meeting-more-menu" class="dropdown hidden">
+        <button id="delete-meeting-button" class="danger-button full-width">회의 삭제</button>
+      </div>
+      <div id="meeting-end-dialog" class="dialog hidden">
+        <p>회의 코드를 저장하시겠습니까?</p>
+        <div class="dialog-actions">
+          <button id="keep-meeting-button" class="secondary-button">저장</button>
+          <button id="discard-meeting-button" class="danger-button">삭제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
